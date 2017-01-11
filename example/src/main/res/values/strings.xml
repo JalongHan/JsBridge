@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">JsBridge</string>
+    <string name="app_name">汇聚万家</string>
     <string name="button_name">Java调用Web</string>
 </resources>
