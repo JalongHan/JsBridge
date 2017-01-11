@@ -15,7 +15,6 @@ import com.github.lzyzsd.jsbridge.BridgeHandler;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.github.lzyzsd.jsbridge.CallBackFunction;
 import com.github.lzyzsd.jsbridge.DefaultHandler;
-import com.google.gson.Gson;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -29,26 +28,28 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	ValueCallback<Uri> mUploadMessage;
 
-    static class Location {
-        String address;
-    }
+	static class Location {
+		String address;
+	}
 
-    static class User {
-        String name;
-        Location location;
-        String testStr;
-    }
+	static class User {
+		String name;
+		Location location;
+		String testStr;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-        webView = (BridgeWebView) findViewById(R.id.webView);
+		webView = (BridgeWebView) findViewById(R.id.webView);
 
 		button = (Button) findViewById(R.id.button);
 
 		button.setOnClickListener(this);
+
+		button.setVisibility(View.GONE);
 
 		webView.setDefaultHandler(new DefaultHandler());
 
@@ -70,32 +71,51 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		webView.loadUrl("file:///android_asset/demo.html");
+		webView.loadUrl("http://139.129.60.7:8080/www/v-QfURzy-zh_CN-/All/order_post.w?device=m");
 
-		webView.registerHandler("submitFromWeb", new BridgeHandler() {
+		webView.registerHandler("getOrderParam", new BridgeHandler() {
 
 			@Override
 			public void handler(String data, CallBackFunction function) {
+				String json = "{\"uid\":\"14\",\"goods_info\":{\"shop_id\":\"3\",\"shop_name\":\"史磊的店铺\",\"goods_info\":[{\"goods_id\":\"7\",\"title\":\"手机\",\"num\":\"5\",\"price\":\"1000\"}]}}";
+
 				Log.i(TAG, "handler = submitFromWeb, data from web = " + data);
-                function.onCallBack("submitFromWeb exe, response data 中文 from Java");
+
+				function.onCallBack(json);
+
+
+
 			}
 
 		});
 
-        User user = new User();
-        Location location = new Location();
-        location.address = "SDU";
-        user.location = location;
-        user.name = "大头鬼";
 
-        webView.callHandler("functionInJs", new Gson().toJson(user), new CallBackFunction() {
-            @Override
-            public void onCallBack(String data) {
+		webView.registerHandler("addOrder", new BridgeHandler() {
+			@Override
+			public void handler(String data, CallBackFunction function) {
+				Log.i(TAG, "handler: addOrder");
+			}
+		});
 
-            }
-        });
 
-        webView.send("hello");
+
+
+
+//
+//		User user = new User();
+//		Location location = new Location();
+//		location.address = "SDU";
+//		user.location = location;
+//		user.name = "大头鬼";
+//
+//		webView.callHandler("functionInJs", new Gson().toJson(user), new CallBackFunction() {
+//			@Override
+//			public void onCallBack(String data) {
+//
+//			}
+//		});
+//
+//		webView.send("hello");
 
 	}
 
@@ -120,7 +140,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (button.equals(v)) {
-            webView.callHandler("functionInJs", "data from Java", new CallBackFunction() {
+			webView.callHandler("functionInJs", "data from Java", new CallBackFunction() {
 
 				@Override
 				public void onCallBack(String data) {

@@ -46,12 +46,29 @@
         messageHandlers[handlerName] = handler;
     }
 
-    function callHandler(handlerName, data, responseCallback) {
-        _doSend({
-            handlerName: handlerName,
-            data: data
-        }, responseCallback);
+//    function callHandler(handlerName, data, responseCallback) {
+//        _doSend({
+//            handlerName: handlerName,
+//            data: data
+//        }, responseCallback);
+//    }
+//
+
+    function callHandler(handlerName,responseCallback) {
+        if (arguments.length == 3) {
+              _doSend({
+              handlerName: handlerName,
+              data: data
+              }, responseCallback);
+
+        } else {
+              _doSend({
+              handlerName: handlerName
+
+              }, responseCallback);
+        }
     }
+
 
     //sendMessage add message, 触发native处理 sendMessage
     function _doSend(message, responseCallback) {
